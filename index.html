@@ -177,59 +177,48 @@
 
   <script>
    // Reveal animation
-  document.addEventListener('DOMContentLoaded', function(){
-    document.querySelectorAll('.reveal').forEach((el, i) => {
-      el.style.animationDelay = (i*0.12) + 's';
-      el.classList.add('revealed');
-    });
-  });
-
-  // Barba.js transition
-  barba.init({
-    transitions: [{
-      name: 'fade-transition',
-      leave(data) {
-        return gsap.to(data.current.container, {
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.inOut"
-        });
-      },
-      enter(data) {
-        return gsap.from(data.next.container, {
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.inOut"
-        });
-      }
-    }]
-  });
-
-  // Pemesanan: submit ke PHP dan redirect WA
-  function customSend(event) {
+ <script>
+document.getElementById("formPemesanan").addEventListener("submit", function(event) {
     event.preventDefault();
-    var form = event.target;
-    var nama = form.nama.value;
-    var alamat = form.alamat.value;
-    var produk = form.produk.value;
-    var nohp = form.nohp.value;
+
+    var nama = this.nama.value;
+    var alamat = this.alamat.value;
+    var produk = this.produk.value;
+    var nohp = this.nohp.value;
+
     var pesanWa =
-      "Halo, saya ingin memesan:%0A" +
-      "Nama: " + nama + "%0A" +
-      "Alamat: " + alamat + "%0A" +
-      "Produk & Jumlah: " + produk + "%0A" +
-      "Nomor HP/WA: " + nohp;
-    // Submit ke order.php (email admin)
-    form.submit("mailto:lensamedia48@gmail.com");
-    // Redirect ke WhatsApp admin (pesanan user)
-    setTimeout(function() {
-      window.open(
-        "https://wa.me/6282199242564?text=" + pesanWa,
-        "_blank"
-      );
-    }, 1000);
-    return false;
-  }
+        "Halo, saya ingin memesan:%0A" +
+        "Nama: " + nama + "%0A" +
+        "Alamat: " + alamat + "%0A" +
+        "Produk & Jumlah: " + produk + "%0A" +
+        "Nomor HP/WA: " + nohp;
+
+    // ----- 1. KIRIM EMAIL via EmailJS -----
+    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        nama: nama,
+        alamat: alamat,
+        produk: produk,
+        nohp: nohp,
+        full_text: pesanWa.replace(/%0A/g, "\n")
+    })
+    .then(function(response) {
+        console.log("EMAIL TERKIRIM", response);
+
+        // ----- 2. KIRIM WHATSAPP -----
+        window.open(
+            "https://wa.me/6282199242564?text=" + pesanWa,
+            "_blank"
+        );
+        alert("Pesanan berhasil dikirim ke Email & WhatsApp!");
+    })
+    .catch(function(error) {
+        console.log("EMAIL GAGAL", error);
+        alert("Email gagal dikirim. Silakan coba lagi.");
+    });
+
+});
+</script>
+
   </script>
 </body>
 </html>
