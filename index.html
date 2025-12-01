@@ -181,18 +181,24 @@
 document.getElementById("formPemesanan").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    var nama = this.nama.value;
-    var alamat = this.alamat.value;
-    var produk = this.produk.value;
-    var nohp = this.nohp.value;
-
-    var pesanWa =
-        "Halo, saya ingin memesan:%0A" +
-        "Nama: " + nama + "%0A" +
-        "Alamat: " + alamat + "%0A" +
-        "Produk & Jumlah: " + produk + "%0A" +
-        "Nomor HP/WA: " + nohp;
-
+        function sendOrder(){
+      var nama = encodeURIComponent(document.getElementById('nama').value || '');
+      var produk = encodeURIComponent(document.getElementById('produk').value || '');
+      var jumlah = encodeURIComponent(document.getElementById('jumlah').value || '1');
+      var ukuran = encodeURIComponent(document.getElementById('ukuran').value || '');
+      var alamat = encodeURIComponent(document.getElementById('alamat').value || '');
+      var catatan = encodeURIComponent(document.getElementById('catatan').value || '');
+      if(!nama||!produk||!jumlah||!ukuran||!alamat){alert("Mohon isi semua data utama!");return;}
+      var subject = encodeURIComponent('Pemesanan Akar Bahar');
+      var body = 'Halo, saya ingin memesan produk Akar Bahar.%0A%0A' +
+                 'Nama: ' + nama + '%0A' +
+                 'Produk: ' + produk + '%0A' +
+                 'Jumlah: ' + jumlah + '%0A' +
+                 'Ukuran: ' + ukuran + '%0A' +
+                 'Alamat: ' + alamat + '%0A' +
+                 'Catatan: ' + catatan + '%0A';
+      var mailto = 'mailto:faqihumarahmadgazali@gmail.com?subject=' + subject + '&body=' + body;
+      window.location.href = mailto;
     // ----- 1. KIRIM EMAIL via EmailJS -----
     emailjs.send("lensamedia48@gmail.com", "template_7nh3urs", {
         nama: nama,
